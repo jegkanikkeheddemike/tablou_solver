@@ -21,18 +21,21 @@ public class And implements Value {
     }
 
     @Override
-    public void printf(int depth) {
+    public String printf(int depth) {
+
+        String result = "";
+
         String str = "";
         for (int i = 0; i < depth; i++) {
             str += "    ";
         }
-        System.out.println(str + "AND (");
-        first.printf(depth+1);
-        second.printf(depth+1);
-        System.out.println(str + ")");
+        result += str + "AND (\n";
+        result += first.printf(depth + 1);
+        result += second.printf(depth + 1);
+        result += str + ")\n";
 
-        
-        
+        return result;
+
     }
 
 }

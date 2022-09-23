@@ -15,14 +15,17 @@ public class Atomic implements Value {
     }
 
     @Override
-    public void printf(int depth) {
+    public String printf(int depth) {
+
+        String result = "";
+
         String str = "";
         for (int i = 0; i < depth; i++) {
             str += "    ";
         }
 
-        System.out.println(str + name);
-
+        result += str + name + "\n";
+        return result;
     }
 
 }

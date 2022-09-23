@@ -21,14 +21,12 @@ public final class TParser {
     // PARSE TEST
     public static void main(String[] args) {
 
-        try {
-            start_parse("A OR (B OR C)");
-        } catch (FailedToParseException e) {
-            e.printStackTrace();
-        }
+        start_parse("A OR (B OR C)");
+
     }
 
-    public static Value start_parse(String raw) throws FailedToParseException {
+    public static String start_parse(String raw) {
+
         VARIABLES = new AbstractMap<String, Atomic>() {
             @Override
             public Set<Entry<String, Atomic>> entrySet() {
@@ -36,11 +34,14 @@ public final class TParser {
             }
         };
 
+        try {
+            Value val = parse(raw);
 
-        Value val =  parse(raw);
-        val.printf(0);
-        
-        return val;
+            return val.printf(0);
+        } catch (FailedToParseException e) {
+            return e.getStackTrace().toString();
+        }
+
     }
 
     public static Value parse(String raw) throws FailedToParseException {

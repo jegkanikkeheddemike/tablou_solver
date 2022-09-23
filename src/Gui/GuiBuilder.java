@@ -11,71 +11,66 @@ import javax.swing.*;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 
-
+import tablou.parser.TParser;
 
 public class GuiBuilder {
+
     public static void buildWindow() {
-       
+
         // creating the frame
         JFrame frame = new JFrame("Windows 98");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600,800);
-        
+        frame.setSize(600, 800);
+
         try {
             UIManager.setLookAndFeel(new FlatDarculaLaf());
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        
 
-
-        //creating panel and components
+        // creating panel and components
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Enter formula");
         JTextField tf = new JTextField(20);
         JButton result = new JButton("View solutions");
-        result.setPreferredSize(new Dimension(200,30));
-        tf.setPreferredSize(new Dimension(70,30));
+        result.setPreferredSize(new Dimension(200, 30));
+        tf.setPreferredSize(new Dimension(70, 30));
         panel.add(label);
         panel.add(tf);
         panel.add(result);
 
-
-        tf.addKeyListener(new KeyListener(){
+        tf.addKeyListener(new KeyListener() {
 
             @Override
             public void keyTyped(KeyEvent e) {
                 if (e.getKeyChar() == '\n') {
                     result.doClick();
                 }
-                
+
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                // TODO Auto-generated method stub
-                
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                // TODO Auto-generated method stub
-                
-            } 
-            
+            }
+
         });
-
-
 
         JTextArea ta = new JTextArea();
         ta.setEditable(false);
         ta.setLineWrap(true);
 
-        result.addActionListener(new ActionListener(){
+        result.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                ta.append(tf.getText());
+
+                String output = TParser.start_parse(tf.getText());
+
+                ta.setText(output);
             }
 
         });
