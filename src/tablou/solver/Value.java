@@ -1,4 +1,4 @@
-package Tablou.solver;
+package tablou.solver;
 
 public interface Value {
     

@@ -1,4 +1,4 @@
-package Tablou;
+package tablou.solver;
 
 public enum Type {
     Atomic,
