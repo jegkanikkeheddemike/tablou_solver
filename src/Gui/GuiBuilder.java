@@ -1,6 +1,10 @@
 package Gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.*;
 
@@ -33,8 +37,48 @@ public class GuiBuilder {
         panel.add(tf);
         panel.add(result);
 
+
+        tf.addKeyListener(new KeyListener(){
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyChar() == '\n') {
+                    result.doClick();
+                }
+                
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // TODO Auto-generated method stub
+                
+            } 
+            
+        });
+
+
+
+        JTextArea ta = new JTextArea();
+        ta.setEditable(false);
+
+        result.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ta.append(tf.getText());
+            }
+
+        });
+
         // Adding components to frame
         frame.getContentPane().add(BorderLayout.SOUTH, panel);
+        frame.getContentPane().add(BorderLayout.CENTER, ta);
         frame.setVisible(true);
     }
 }
