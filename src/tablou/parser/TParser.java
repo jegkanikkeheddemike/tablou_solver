@@ -1,22 +1,46 @@
 package tablou.parser;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Set;
 
+import tablou.solver.Atomic;
 import tablou.solver.Value;
 import tablou.solver.operators.And;
 import tablou.solver.operators.Or;
 
 public final class TParser {
 
+    static AbstractMap<String, Atomic> VARIABLES = new AbstractMap<String, Atomic>() {
+        @Override
+        public Set<Entry<String, Atomic>> entrySet() {
+            return null;
+        }
+    };
+
     // PARSE TEST
     public static void main(String[] args) {
 
         try {
-            parse("A OR (B or C)");
+            start_parse("A OR (B OR C)");
         } catch (FailedToParseException e) {
-            System.out.println(e.toString());
+            e.printStackTrace();
         }
+    }
 
+    public static Value start_parse(String raw) throws FailedToParseException {
+        VARIABLES = new AbstractMap<String, Atomic>() {
+            @Override
+            public Set<Entry<String, Atomic>> entrySet() {
+                return null;
+            }
+        };
+
+
+        Value val =  parse(raw);
+        val.printf(0);
+        
+        return val;
     }
 
     public static Value parse(String raw) throws FailedToParseException {
@@ -27,17 +51,20 @@ public final class TParser {
             String operator = split.get(1);
             String second = split.get(2);
 
-            if (operator == "AND") {
+            if (operator.equals("AND")) {
                 return new And(first, second);
-            } else if (operator == "OR") {
+            } else if (operator.equals("OR")) {
                 return new Or(first, second);
             } else {
                 throw new FailedToParseException();
             }
 
+        } else if (split.size() == 1) {
+            return new Atomic(raw);
         } else {
             throw new FailedToParseException();
         }
+
     }
 
     static ArrayList<String> split(String str) {
@@ -57,8 +84,6 @@ public final class TParser {
                 onword = true;
             } else if (chars[i] == ' ') {
                 onword = false;
-                System.out.println("SPACE with depth " + depth);
-
                 if (depth == 0) {
 
                     String part;
