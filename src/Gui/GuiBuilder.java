@@ -66,6 +66,7 @@ public class GuiBuilder {
 
         JTextArea ta = new JTextArea();
         ta.setEditable(false);
+        ta.setLineWrap(true);
 
         result.addActionListener(new ActionListener(){
 
