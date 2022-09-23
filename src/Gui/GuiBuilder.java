@@ -1,6 +1,7 @@
 package Gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -18,7 +19,7 @@ public class GuiBuilder {
         // creating the frame
         JFrame frame = new JFrame("Windows 98");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800,800);
+        frame.setSize(600,800);
         
         try {
             UIManager.setLookAndFeel(new FlatDarculaLaf());
@@ -33,6 +34,8 @@ public class GuiBuilder {
         JLabel label = new JLabel("Enter formula");
         JTextField tf = new JTextField(20);
         JButton result = new JButton("View solutions");
+        result.setPreferredSize(new Dimension(200,30));
+        tf.setPreferredSize(new Dimension(70,30));
         panel.add(label);
         panel.add(tf);
         panel.add(result);
@@ -78,7 +81,7 @@ public class GuiBuilder {
         });
 
         // Adding components to frame
-        frame.getContentPane().add(BorderLayout.SOUTH, panel);
+        frame.getContentPane().add(BorderLayout.NORTH, panel);
         frame.getContentPane().add(BorderLayout.CENTER, ta);
         frame.setVisible(true);
     }
