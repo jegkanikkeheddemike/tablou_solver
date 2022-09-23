@@ -20,11 +20,9 @@ public class Atomic implements Value {
         for (int i = 0; i < depth; i++) {
             str += "    ";
         }
-        if (isSome) {
-            System.out.println(str + value + "\n");
-        } else {
-            System.out.println(str + "None\n");
-        }
+
+        System.out.println(str + name);
+
     }
 
 }

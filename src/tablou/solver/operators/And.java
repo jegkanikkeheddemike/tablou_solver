@@ -24,7 +24,7 @@ public class And implements Value {
     public void printf(int depth) {
         String str = "";
         for (int i = 0; i < depth; i++) {
-            str += " ";
+            str += "    ";
         }
         System.out.println(str + "AND (");
         first.printf(depth+1);
