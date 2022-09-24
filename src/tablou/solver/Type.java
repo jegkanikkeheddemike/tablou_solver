@@ -4,4 +4,5 @@ public enum Type {
     Atomic,
     And,
     Or,
+    Not,
 }

@@ -1,31 +1,21 @@
 package tablou.parser;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.HashMap;
 
 import tablou.solver.Atomic;
 import tablou.solver.Value;
 import tablou.solver.operators.And;
+import tablou.solver.operators.Not;
 import tablou.solver.operators.Or;
 
 public final class TParser {
 
-    static AbstractMap<String, Atomic> VARIABLES = new AbstractMap<String, Atomic>() {
-        @Override
-        public Set<Entry<String, Atomic>> entrySet() {
-            return null;
-        }
-    };
+    static HashMap<String, Atomic> VARIABLES = new HashMap<String, Atomic>();
 
     public static Value start_parse(String raw) throws FailedToParseException {
 
-        VARIABLES = new AbstractMap<String, Atomic>() {
-            @Override
-            public Set<Entry<String, Atomic>> entrySet() {
-                return null;
-            }
-        };
+        VARIABLES = new HashMap<String, Atomic>();
 
         return parse(raw);
 
@@ -49,51 +39,58 @@ public final class TParser {
             }
 
         } else if (split.size() == 1) {
-            return new Atomic(raw);
+            return new Atomic(split.get(0));
+        } else if (split.size() == 2) {
+
+            return new Not(split.get(1));
+
         } else {
             String splits = "";
             for (String part : split) {
-                splits += "\n" + part;
+                splits += "\n\"" + part + "\"";
             }
 
-
-            throw new FailedToParseException("Parathesis split failed to split " + raw + " to three or one substrings\nResulting splits: " + splits);
+            throw new FailedToParseException("Parathesis split failed to split " + raw
+                    + " to three or one substrings\nResulting splits: " + splits);
         }
 
     }
 
     static ArrayList<String> split(String str) throws FailedToParseException {
-        System.out.println("SPLITTING: " + str);
-        System.out.println("_________________");
-
+        str = str.trim();
+        str = str.replaceAll("\\s+", " "); // REMOVES DUPLICATE SPACES
         str = str + ' ';
         ArrayList<String> result = new ArrayList<String>();
 
+        // IF IS A NOT, THEN JUST KINDA DONT DO ANYHING :)
+        if (str.length() > 6 && str.subSequence(0, 3).equals("NOT")) {
+            if (str.length() != str.indexOf(')')+2) {
+                throw new FailedToParseException("Expected \")\" to be the end of the string after NOT(X) but found: \"" + str.substring(str.indexOf(')'))  + "\"\nMaybe surround the NOT(X) with some parenthesis!");
+            }
+
+            String inner = str.substring(3, str.length() - 1);
+            result.add("NOT");
+            result.add(inner);
+            return result;
+        }
+
         int depth = 0;
-        boolean onword = false;
         boolean hasdepth = false;
+        boolean any1hasdepth = false;
         int start = 0;
 
         char[] chars = new char[str.length()];
         str.getChars(0, str.length(), chars, 0);
 
         for (int i = 0; i < chars.length; i++) {
-            if (Character.isAlphabetic(chars[i])) {
-                onword = true;
-            } else if (chars[i] == ' ') {
-                onword = false;
+            if (chars[i] == ' ') {
                 if (depth == 0) {
-
-                    System.out.println("INTERVAL: " + str.substring(start,i));
-
-
                     String part;
                     if (hasdepth) {
                         part = str.substring(start + 1, i - 1);
                     } else {
                         part = str.substring(start, i);
                     }
-                    System.out.println("PART: " + part);
 
                     hasdepth = false;
 
@@ -101,8 +98,9 @@ public final class TParser {
                     result.add(part);
                 }
 
-            } else if (chars[i] == '(' && !onword) {
+            } else if (chars[i] == '(') {
                 hasdepth = true;
+                any1hasdepth = true;
                 depth++;
             } else if (chars[i] == ')') {
                 depth--;
@@ -113,10 +111,7 @@ public final class TParser {
             throw new FailedToParseException("Failed to split \"" + str + "\". Missing parenthesis.");
         }
 
-        for (String strpart : result) {
-            System.out.println(strpart);
-        }
-
         return result;
+
     }
 }
