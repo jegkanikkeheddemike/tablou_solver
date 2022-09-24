@@ -81,7 +81,7 @@ public class GuiBuilder {
 
         });
 
-        // Adding components to frame
+        // Adding components to frame 
         frame.getContentPane().add(BorderLayout.NORTH, panel);
         frame.getContentPane().add(BorderLayout.CENTER, ta);
         frame.setVisible(true);
