@@ -6,12 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import javax.swing.*;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 
+import tablou.parser.FailedToParseException;
 import tablou.parser.TParser;
+import tablou.solver.Value;
 
 public class GuiBuilder {
 
@@ -68,9 +69,14 @@ public class GuiBuilder {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                String output = TParser.start_parse(tf.getText());
+                try {
+                    Value output = TParser.start_parse(tf.getText());
+                    ta.setText(output.printf(0));
+                } catch (FailedToParseException err) {
+                    ta.setText(err.getMessage());
 
-                ta.setText(output);
+                }
+
             }
 
         });

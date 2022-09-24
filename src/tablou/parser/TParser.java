@@ -18,14 +18,7 @@ public final class TParser {
         }
     };
 
-    // PARSE TEST
-    public static void main(String[] args) {
-
-        start_parse("A OR (B OR C)");
-
-    }
-
-    public static String start_parse(String raw) {
+    public static Value start_parse(String raw) throws FailedToParseException {
 
         VARIABLES = new AbstractMap<String, Atomic>() {
             @Override
@@ -34,13 +27,7 @@ public final class TParser {
             }
         };
 
-        try {
-            Value val = parse(raw);
-
-            return val.printf(0);
-        } catch (FailedToParseException e) {
-            return e.getStackTrace().toString();
-        }
+        return parse(raw);
 
     }
 
@@ -57,18 +44,28 @@ public final class TParser {
             } else if (operator.equals("OR")) {
                 return new Or(first, second);
             } else {
-                throw new FailedToParseException();
+                throw new FailedToParseException("Failed to parse \"" + operator + "\" to a valid operator at " + raw
+                        + "\nfirst: " + first + "\noperator: " + operator + "\nsecond: " + second);
             }
 
         } else if (split.size() == 1) {
             return new Atomic(raw);
         } else {
-            throw new FailedToParseException();
+            String splits = "";
+            for (String part : split) {
+                splits += "\n" + part;
+            }
+
+
+            throw new FailedToParseException("Parathesis split failed to split " + raw + " to three or one substrings\nResulting splits: " + splits);
         }
 
     }
 
-    static ArrayList<String> split(String str) {
+    static ArrayList<String> split(String str) throws FailedToParseException {
+        System.out.println("SPLITTING: " + str);
+        System.out.println("_________________");
+
         str = str + ' ';
         ArrayList<String> result = new ArrayList<String>();
 
@@ -87,12 +84,18 @@ public final class TParser {
                 onword = false;
                 if (depth == 0) {
 
+                    System.out.println("INTERVAL: " + str.substring(start,i));
+
+
                     String part;
                     if (hasdepth) {
                         part = str.substring(start + 1, i - 1);
                     } else {
                         part = str.substring(start, i);
                     }
+                    System.out.println("PART: " + part);
+
+                    hasdepth = false;
 
                     start = i + 1;
                     result.add(part);
@@ -106,6 +109,14 @@ public final class TParser {
 
             }
         }
+        if (depth != 0) {
+            throw new FailedToParseException("Failed to split \"" + str + "\". Missing parenthesis.");
+        }
+
+        for (String strpart : result) {
+            System.out.println(strpart);
+        }
+
         return result;
     }
 }
