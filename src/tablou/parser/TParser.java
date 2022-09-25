@@ -39,7 +39,9 @@ public final class TParser {
             }
 
         } else if (split.size() == 1) {
+
             return new Atomic(split.get(0));
+
         } else if (split.size() == 2) {
 
             return new Not(split.get(1));
@@ -64,8 +66,9 @@ public final class TParser {
 
         // IF IS A NOT, THEN JUST KINDA DONT DO ANYHING :)
         if (str.length() > 6 && str.subSequence(0, 3).equals("NOT")) {
-            if (str.length() != str.indexOf(')')+2) {
-                throw new FailedToParseException("Expected \")\" to be the end of the string after NOT(X) but found: \"" + str.substring(str.indexOf(')'))  + "\"\nMaybe surround the NOT(X) with some parenthesis!");
+            if (str.length() != str.indexOf(')') + 2) {
+                throw new FailedToParseException("Expected \")\" to be the end of the string after NOT(X) but found: \""
+                        + str.substring(str.indexOf(')')) + "\"\nMaybe surround the NOT(X) with some parenthesis!");
             }
 
             String inner = str.substring(3, str.length() - 1);
@@ -103,12 +106,20 @@ public final class TParser {
                 any1hasdepth = true;
                 depth++;
             } else if (chars[i] == ')') {
+                if (depth == 0) {
+                    throw new FailedToParseException(
+                            "Reached negative depth at " + str + " by closing parenthesis before opening.");
+                }
                 depth--;
 
             }
         }
         if (depth != 0) {
             throw new FailedToParseException("Failed to split \"" + str + "\". Missing parenthesis.");
+        }
+
+        if (result.size() == 1 && any1hasdepth) {
+            return split(result.get(0));
         }
 
         return result;
