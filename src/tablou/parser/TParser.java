@@ -12,6 +12,7 @@ import tablou.solver.values.Eq;
 import tablou.solver.values.Not;
 import tablou.solver.values.Or;
 import tablou.solver.values.Then;
+import tablou.solver.values.Xor;
 
 public final class TParser {
 
@@ -39,6 +40,8 @@ public final class TParser {
                 return new Then(first, second, variables);
             } else if (operator.equals("EQ")) {
                 return new Eq(first, second, variables);
+            } else if (operator.equals("XOR")) {
+                return new Xor(first, second, variables);
             } else {
                 throw new FailedToParseException("Failed to parse \"" + operator + "\" to a valid operator at " + raw
                         + "\nfirst: " + first + "\noperator: " + operator + "\nsecond: " + second);
@@ -72,7 +75,7 @@ public final class TParser {
 
         // IF IS A NOT, THEN JUST KINDA DONT DO ANYHING :)
         if (str.length() > 6 && str.subSequence(0, 3).equals("NOT")) {
-            if (str.length() != str.indexOf(')') + 2) {
+            if (str.length() != str.lastIndexOf(')') + 2) {
                 throw new FailedToParseException("Expected \")\" to be the end of the string after NOT(X) but found: \""
                         + str.substring(str.indexOf(')')) + "\"\nMaybe surround the NOT(X) with some parenthesis!");
             }

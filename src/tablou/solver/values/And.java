@@ -53,7 +53,12 @@ public class And implements Value {
                 solutions.addAll(second.solve(solution, true));
             }
         } else {
-            throw new UnsupportedOperationException("FALSE not implemented to AND YET");
+
+            // To solve AND to false. We need either one to be false (i think)
+
+            solutions.addAll(first.solve(variables.clone(), false));
+            solutions.addAll(second.solve(variables.clone(), false));
+
         }
 
         return solutions;

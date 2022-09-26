@@ -56,7 +56,13 @@ public class Then implements Value {
                 solutions.addAll(second.solve(solution, true));
             }
         } else {
-            throw new UnsupportedOperationException("FALSE is not implemented for THEN yet!");
+            // For then so solve to false, it needs first to be true and second to be false
+
+            ArrayList<VarMap> first_true = first.solve(variables, true);
+            for (VarMap solution : first_true) {
+                solutions.addAll(second.solve(solution, false));
+            }
+
         }
 
         return solutions;

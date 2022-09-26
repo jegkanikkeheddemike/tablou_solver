@@ -49,7 +49,13 @@ public class Or implements Value {
             solutions.addAll(first.solve(variables.clone(), target_value));
             solutions.addAll(second.solve(variables.clone(), target_value));
         } else {
-            throw new UnsupportedOperationException("FALSE is not yet implemented for OR");
+            // To solve OR to false, both need to be false
+
+            ArrayList<VarMap> first_false = first.solve(variables, false);
+            for (VarMap solution : first_false) {
+                solutions.addAll(second.solve(solution, false));
+            }
+
         }
 
         return solutions;

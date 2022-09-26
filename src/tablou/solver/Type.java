@@ -6,5 +6,6 @@ public enum Type {
     Or,
     Not,
     Then,
-    Eq
+    Eq,
+    Xor
 }

@@ -8,19 +8,19 @@ import tablou.parser.TParser;
 import tablou.solver.Type;
 import tablou.solver.Value;
 
-public class Eq implements Value {
+public class Xor implements Value {
 
     Value first;
     Value second;
 
-    public Eq(String first, String second, VarMap variables) throws FailedToParseException {
+    public Xor(String first, String second, VarMap variables) throws FailedToParseException {
         this.first = TParser.parse(first, variables);
         this.second = TParser.parse(second, variables);
     }
 
     @Override
     public Type type() {
-        return Type.Eq;
+        return Type.Xor;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class Eq implements Value {
         for (int i = 0; i < depth; i++) {
             str += "    ";
         }
-        result += str + "EQ (\n";
+        result += str + "XOR (\n";
         result += first.printf(depth + 1);
         result += second.printf(depth + 1);
         result += str + ")\n";
@@ -45,36 +45,39 @@ public class Eq implements Value {
         ArrayList<VarMap> solutions = new ArrayList<VarMap>();
 
         if (target_value == true) {
-            // Find solutions for both true
+            // XOR is true is either but NOT both
+
+            // Solve for first true second false
+            ArrayList<VarMap> first_true = first.solve(variables.clone(), true);
+            for (VarMap solution : first_true) {
+                solutions.addAll(second.solve(solution, false));
+            }
+
+            // Solve for first false second true
+            ArrayList<VarMap> first_false = first.solve(variables.clone(), false);
+            for (VarMap solution : first_false) {
+                solutions.addAll(second.solve(solution, true));
+            }
+
+        } else {
+            // Needs both true or both false
+
+            // Both true
+
             ArrayList<VarMap> first_true = first.solve(variables.clone(), true);
             for (VarMap solution : first_true) {
                 solutions.addAll(second.solve(solution, true));
             }
 
-
-            // Find solutions for both false
+            // Both false
             ArrayList<VarMap> first_false = first.solve(variables.clone(), false);
             for (VarMap solution : first_false) {
                 solutions.addAll(second.solve(solution, false));
             }
-        } else {
 
-            //For EQ to solve to false, it need one to be true and other to be false
-
-            //Solve for first true, second false
-            ArrayList<VarMap> first_true = first.solve(variables.clone(), true);
-            for (VarMap solution: first_true) {
-                solutions.addAll(second.solve(solution, false));
-            }
-
-            //Solve for first false, second true
-            ArrayList<VarMap> first_false = first.solve(variables.clone(), false);
-            for (VarMap solution: first_false) {
-                solutions.addAll(second.solve(solution, true));
-            }
-            return solutions;
         }
 
         return solutions;
     }
+
 }
