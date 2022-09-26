@@ -92,7 +92,7 @@ public class GuiBuilder {
                         for (String key : solution.keySet()) {
                             solution_str += key + ": " + solution.get(key).value() + "\n";
                         }
-                        ta.append("\n_____________________" + solution_str);
+                        ta.append("\n_____________________\n" + solution_str);
                     }
 
                 } catch (FailedToParseException err) {

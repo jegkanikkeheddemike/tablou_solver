@@ -1,5 +1,7 @@
 package tablou.solver.values;
 
+import java.util.ArrayList;
+
 import tablou.VarMap;
 import tablou.parser.FailedToParseException;
 import tablou.parser.TParser;
@@ -12,8 +14,8 @@ public class And implements Value {
     public Value second;
 
     public And(String first, String second, VarMap variables) throws FailedToParseException {
-        this.first = TParser.parse(first,variables);
-        this.second = TParser.parse(second,variables);
+        this.first = TParser.parse(first, variables);
+        this.second = TParser.parse(second, variables);
     }
 
     @Override
@@ -37,6 +39,24 @@ public class And implements Value {
 
         return result;
 
+    }
+
+    @Override
+    public ArrayList<VarMap> solve(VarMap variables, boolean target_value) {
+        ArrayList<VarMap> solutions = new ArrayList<VarMap>();
+
+        if (target_value == true) {
+
+            ArrayList<VarMap> first_solutions = first.solve(variables, true);
+
+            for (VarMap solution : first_solutions) {
+                solutions.addAll(second.solve(solution, true));
+            }
+        } else {
+            throw new UnsupportedOperationException("FALSE not implemented to AND YET");
+        }
+
+        return solutions;
     }
 
 }

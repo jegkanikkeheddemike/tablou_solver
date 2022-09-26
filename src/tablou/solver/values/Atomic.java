@@ -1,7 +1,6 @@
 package tablou.solver.values;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import tablou.VarMap;
 import tablou.solver.Type;
@@ -12,9 +11,15 @@ public class Atomic implements Value {
     boolean isSome = false;
     boolean value = false;
 
-    public Atomic(String name, HashMap<String, Atomic> variables) {
+    public Atomic(String name, VarMap variables) {
         this.name = name;
         variables.put(name, this);
+    }
+
+    private Atomic(String name, boolean value) {
+        this.name = name;
+        isSome = true;
+        this.value = value;
     }
 
     public String value() {
@@ -47,7 +52,19 @@ public class Atomic implements Value {
     @Override
     public ArrayList<VarMap> solve(VarMap variables, boolean target_value) {
 
-        return Value.super.solve(variables, target_value);
+        ArrayList<VarMap> solutions = new ArrayList<VarMap>();
+
+        Atomic value = variables.get(name);
+        if (value.isSome) {
+            if (value.value == target_value) {
+                solutions.add(variables);
+            }
+        } else {
+            variables.put(name, new Atomic(name, target_value));
+            solutions.add(variables);
+        }
+
+        return solutions;
     }
 
     @Override
