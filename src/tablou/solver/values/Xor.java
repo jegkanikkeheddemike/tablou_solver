@@ -61,7 +61,7 @@ public class Xor implements Value {
 
         } else {
             // Needs both true or both false
-
+            
             // Both true
 
             ArrayList<VarMap> first_true = first.solve(variables.clone(), true);
