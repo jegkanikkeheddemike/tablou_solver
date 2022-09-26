@@ -1,5 +1,6 @@
 package tablou.solver.values;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import tablou.solver.Type;
@@ -40,6 +41,12 @@ public class Atomic implements Value {
 
         result += str + name + "\n";
         return result;
+    }
+
+    @Override
+    public ArrayList<HashMap<String, Atomic>> solve(HashMap<String, Atomic> variables, boolean target_value) {
+
+        return Value.super.solve(variables, target_value);
     }
 
 }

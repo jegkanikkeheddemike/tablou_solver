@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+//import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 
@@ -26,6 +28,8 @@ public class GuiBuilder {
         // creating the frame
         JFrame frame = new JFrame("Windows 98");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // frame.setUndecorated(true);
+        // frame.setShape(new RoundRectangle2D.Double(10, 10, 550, 750, 50, 50));
         frame.setSize(600, 800);
         frame.setLocationRelativeTo(null);
 
@@ -81,15 +85,21 @@ public class GuiBuilder {
                     HashMap<String, Atomic> variables = output.getValue1();
 
                     ta.setText(root.printf(0));
-                    String variables_str = "";
-                    for (String key : variables.keySet()) {
-                        variables_str += key + ": " + variables.get(key).value() + "\n";
+
+                    ArrayList<HashMap<String, Atomic>> solutions = root.solve(variables, true);
+
+                    for (HashMap<String, Atomic> solution : solutions) {
+                        String solution_str = "";
+                        for (String key : solution.keySet()) {
+                            solution_str += key + ": " + solution.get(key).value() + "\n";
+                        }
+                        ta.append("\n_____________________" + solution_str);
                     }
-                    ta.append(variables_str);
 
                 } catch (FailedToParseException err) {
                     ta.setText(err.getMessage());
-
+                } catch (UnsupportedOperationException err) {
+                    ta.append(err.getMessage());
                 }
 
             }
