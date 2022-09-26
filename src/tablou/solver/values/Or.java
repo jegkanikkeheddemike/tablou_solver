@@ -2,8 +2,6 @@ package tablou.solver.values;
 
 import java.util.ArrayList;
 
-import javax.naming.OperationNotSupportedException;
-
 import tablou.VarMap;
 import tablou.parser.FailedToParseException;
 import tablou.parser.TParser;

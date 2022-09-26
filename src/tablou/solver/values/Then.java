@@ -1,5 +1,7 @@
 package tablou.solver.values;
 
+import java.util.ArrayList;
+
 import tablou.VarMap;
 import tablou.parser.FailedToParseException;
 import tablou.parser.TParser;
@@ -35,6 +37,29 @@ public class Then implements Value {
         result += str + ")\n";
 
         return result;
+    }
+
+    @Override
+    public ArrayList<VarMap> solve(VarMap variables, boolean target_value) {
+
+        ArrayList<VarMap> solutions = new ArrayList<VarMap>();
+
+        if (target_value == true) {
+            // find solutions for first = false
+            solutions.addAll(first.solve(variables.clone(), false));
+
+            // Find solutions for both true
+
+            ArrayList<VarMap> first_true = first.solve(variables, true);
+
+            for (VarMap solution : first_true) {
+                solutions.addAll(second.solve(solution, true));
+            }
+        } else {
+            throw new UnsupportedOperationException("FALSE is not implemented for THEN yet!");
+        }
+
+        return solutions;
     }
 
 }

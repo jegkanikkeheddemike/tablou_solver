@@ -1,5 +1,7 @@
 package tablou.solver.values;
 
+import java.util.ArrayList;
+
 import tablou.VarMap;
 import tablou.parser.FailedToParseException;
 import tablou.parser.TParser;
@@ -32,6 +34,11 @@ public class Not implements Value {
         result += str + ")\n";
 
         return result;
+    }
+
+    @Override
+    public ArrayList<VarMap> solve(VarMap variables, boolean target_value) {
+        return value.solve(variables, !target_value);
     }
 
 }

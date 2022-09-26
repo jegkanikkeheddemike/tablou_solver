@@ -1,5 +1,7 @@
 package tablou.solver.values;
 
+import java.util.ArrayList;
+
 import tablou.VarMap;
 import tablou.parser.FailedToParseException;
 import tablou.parser.TParser;
@@ -15,7 +17,6 @@ public class Eq implements Value {
         this.first = TParser.parse(first, variables);
         this.second = TParser.parse(second, variables);
     }
-
 
     @Override
     public Type type() {
@@ -37,5 +38,29 @@ public class Eq implements Value {
 
         return result;
     }
-    
+
+    @Override
+    public ArrayList<VarMap> solve(VarMap variables, boolean target_value) {
+
+        ArrayList<VarMap> solutions = new ArrayList<VarMap>();
+
+        if (target_value == true) {
+            // Find solutions for both true
+            ArrayList<VarMap> first_true = first.solve(variables.clone(), true);
+            for (VarMap solution : first_true) {
+                solutions.addAll(second.solve(solution, true));
+            }
+
+
+            // Find solutions for both false
+            ArrayList<VarMap> first_false = first.solve(variables.clone(), false);
+            for (VarMap solution : first_false) {
+                solutions.addAll(second.solve(solution, false));
+            }
+        } else {
+            throw new UnsupportedOperationException("False is not yet implemented for EQ");
+        }
+
+        return solutions;
+    }
 }
