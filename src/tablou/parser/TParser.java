@@ -3,25 +3,27 @@ package tablou.parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import tablou.solver.Atomic;
+import org.javatuples.Pair;
+
 import tablou.solver.Value;
-import tablou.solver.operators.And;
-import tablou.solver.operators.Not;
-import tablou.solver.operators.Or;
+import tablou.solver.values.And;
+import tablou.solver.values.Atomic;
+import tablou.solver.values.Eq;
+import tablou.solver.values.Not;
+import tablou.solver.values.Or;
+import tablou.solver.values.Then;
 
 public final class TParser {
 
-    static HashMap<String, Atomic> VARIABLES = new HashMap<String, Atomic>();
+    public static Pair<Value, HashMap<String, Atomic>> start_parse(String raw) throws FailedToParseException {
 
-    public static Value start_parse(String raw) throws FailedToParseException {
+        HashMap<String, Atomic> variables = new HashMap<String, Atomic>();
 
-        VARIABLES = new HashMap<String, Atomic>();
-
-        return parse(raw);
+        return new Pair<Value, HashMap<String, Atomic>>(parse(raw, variables), variables);
 
     }
 
-    public static Value parse(String raw) throws FailedToParseException {
+    public static Value parse(String raw, HashMap<String, Atomic> variables) throws FailedToParseException {
         ArrayList<String> split = split(raw);
 
         if (split.size() == 3) {
@@ -30,9 +32,13 @@ public final class TParser {
             String second = split.get(2);
 
             if (operator.equals("AND")) {
-                return new And(first, second);
+                return new And(first, second, variables);
             } else if (operator.equals("OR")) {
-                return new Or(first, second);
+                return new Or(first, second, variables);
+            } else if (operator.equals("THEN")) {
+                return new Then(first, second, variables);
+            } else if (operator.equals("EQ")) {
+                return new Eq(first, second, variables);
             } else {
                 throw new FailedToParseException("Failed to parse \"" + operator + "\" to a valid operator at " + raw
                         + "\nfirst: " + first + "\noperator: " + operator + "\nsecond: " + second);
@@ -40,11 +46,11 @@ public final class TParser {
 
         } else if (split.size() == 1) {
 
-            return new Atomic(split.get(0));
+            return new Atomic(split.get(0), variables);
 
         } else if (split.size() == 2) {
 
-            return new Not(split.get(1));
+            return new Not(split.get(1), variables);
 
         } else {
             String splits = "";

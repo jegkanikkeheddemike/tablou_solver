@@ -5,4 +5,6 @@ public enum Type {
     And,
     Or,
     Not,
+    Then,
+    Eq
 }

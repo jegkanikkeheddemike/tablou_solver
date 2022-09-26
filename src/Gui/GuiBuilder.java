@@ -6,13 +6,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
+
 import javax.swing.*;
+
+import org.javatuples.Pair;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 
 import tablou.parser.FailedToParseException;
 import tablou.parser.TParser;
 import tablou.solver.Value;
+import tablou.solver.values.Atomic;
 
 public class GuiBuilder {
 
@@ -22,6 +27,7 @@ public class GuiBuilder {
         JFrame frame = new JFrame("Windows 98");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 800);
+        frame.setLocationRelativeTo(null);
 
         try {
             UIManager.setLookAndFeel(new FlatDarculaLaf());
@@ -70,8 +76,17 @@ public class GuiBuilder {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    Value output = TParser.start_parse(tf.getText());
-                    ta.setText(output.printf(0));
+                    Pair<Value, HashMap<String, Atomic>> output = TParser.start_parse(tf.getText());
+                    Value root = output.getValue0();
+                    HashMap<String, Atomic> variables = output.getValue1();
+
+                    ta.setText(root.printf(0));
+                    String variables_str = "";
+                    for (String key : variables.keySet()) {
+                        variables_str += key + ": " + variables.get(key).value() + "\n";
+                    }
+                    ta.append(variables_str);
+
                 } catch (FailedToParseException err) {
                     ta.setText(err.getMessage());
 
@@ -81,7 +96,7 @@ public class GuiBuilder {
 
         });
 
-        // Adding components to frame 
+        // Adding components to frame
         frame.getContentPane().add(BorderLayout.NORTH, panel);
         frame.getContentPane().add(BorderLayout.CENTER, ta);
         frame.setVisible(true);
