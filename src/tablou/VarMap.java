@@ -6,7 +6,7 @@ import tablou.solver.values.Atomic;
 
 public class VarMap extends HashMap<String, Atomic> {
     @Override
-    public Object clone() {
+    public VarMap clone() {
 
         VarMap clone = new VarMap();
 

@@ -87,6 +87,8 @@ public class GuiBuilder {
 
                     ArrayList<VarMap> solutions = root.solve(variables, true);
 
+                    ta.append("Solutions: ");
+
                     for (VarMap solution : solutions) {
                         String solution_str = "";
                         for (String key : solution.keySet()) {

@@ -1,5 +1,9 @@
 package tablou.solver.values;
 
+import java.util.ArrayList;
+
+import javax.naming.OperationNotSupportedException;
+
 import tablou.VarMap;
 import tablou.parser.FailedToParseException;
 import tablou.parser.TParser;
@@ -35,5 +39,21 @@ public class Or implements Value {
         result += str + ")\n";
 
         return result;
+    }
+
+    @Override
+    public ArrayList<VarMap> solve(VarMap variables, boolean target_value) {
+
+        ArrayList<VarMap> solutions = new ArrayList<VarMap>();
+
+        if (target_value == true) {
+
+            solutions.addAll(first.solve(variables.clone(), target_value));
+            solutions.addAll(second.solve(variables.clone(), target_value));
+        } else {
+            throw new UnsupportedOperationException("FALSE is not yet implemented for OR");
+        }
+
+        return solutions;
     }
 }
