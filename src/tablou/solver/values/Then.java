@@ -1,7 +1,6 @@
 package tablou.solver.values;
 
-import java.util.HashMap;
-
+import tablou.VarMap;
 import tablou.parser.FailedToParseException;
 import tablou.parser.TParser;
 import tablou.solver.Type;
@@ -12,7 +11,7 @@ public class Then implements Value {
     Value first;
     Value second;
 
-    public Then(String first, String second, HashMap<String,Atomic> variables) throws FailedToParseException {
+    public Then(String first, String second, VarMap variables) throws FailedToParseException {
         this.first = TParser.parse(first, variables);
         this.second = TParser.parse(second, variables);
     }

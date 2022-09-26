@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 //import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
@@ -16,10 +15,10 @@ import org.javatuples.Pair;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 
+import tablou.VarMap;
 import tablou.parser.FailedToParseException;
 import tablou.parser.TParser;
 import tablou.solver.Value;
-import tablou.solver.values.Atomic;
 
 public class GuiBuilder {
 
@@ -80,15 +79,15 @@ public class GuiBuilder {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    Pair<Value, HashMap<String, Atomic>> output = TParser.start_parse(tf.getText());
+                    Pair<Value, VarMap> output = TParser.start_parse(tf.getText());
                     Value root = output.getValue0();
-                    HashMap<String, Atomic> variables = output.getValue1();
+                    VarMap variables = output.getValue1();
 
                     ta.setText(root.printf(0));
 
-                    ArrayList<HashMap<String, Atomic>> solutions = root.solve(variables, true);
+                    ArrayList<VarMap> solutions = root.solve(variables, true);
 
-                    for (HashMap<String, Atomic> solution : solutions) {
+                    for (VarMap solution : solutions) {
                         String solution_str = "";
                         for (String key : solution.keySet()) {
                             solution_str += key + ": " + solution.get(key).value() + "\n";

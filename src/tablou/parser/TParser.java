@@ -1,10 +1,10 @@
 package tablou.parser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.javatuples.Pair;
 
+import tablou.VarMap;
 import tablou.solver.Value;
 import tablou.solver.values.And;
 import tablou.solver.values.Atomic;
@@ -15,15 +15,15 @@ import tablou.solver.values.Then;
 
 public final class TParser {
 
-    public static Pair<Value, HashMap<String, Atomic>> start_parse(String raw) throws FailedToParseException {
+    public static Pair<Value, VarMap> start_parse(String raw) throws FailedToParseException {
 
-        HashMap<String, Atomic> variables = new HashMap<String, Atomic>();
+        VarMap variables = new VarMap();
 
-        return new Pair<Value, HashMap<String, Atomic>>(parse(raw, variables), variables);
+        return new Pair<Value, VarMap>(parse(raw, variables), variables);
 
     }
 
-    public static Value parse(String raw, HashMap<String, Atomic> variables) throws FailedToParseException {
+    public static Value parse(String raw, VarMap variables) throws FailedToParseException {
         ArrayList<String> split = split(raw);
 
         if (split.size() == 3) {

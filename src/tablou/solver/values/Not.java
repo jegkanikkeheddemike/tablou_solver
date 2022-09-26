@@ -1,14 +1,13 @@
 package tablou.solver.values;
 
-import java.util.HashMap;
-
+import tablou.VarMap;
 import tablou.parser.FailedToParseException;
 import tablou.parser.TParser;
 import tablou.solver.Type;
 import tablou.solver.Value;
 
 public class Not implements Value {
-    public Not(String value, HashMap<String, Atomic> variables) throws FailedToParseException {
+    public Not(String value, VarMap variables) throws FailedToParseException {
         this.value = TParser.parse(value, variables);
     }
 
